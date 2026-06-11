@@ -30,6 +30,7 @@ async function run() {
     // post the recruiter job
     const db = client.db("hire-loop");
     const jobCollection = db.collection("job");
+    const companyCollection = db.collection("company");
 
     app.get("/api/jobs", async (req, res) => {
       const query = {};
@@ -50,6 +51,14 @@ async function run() {
     app.post("/api/jobs", async (req, res) => {
       const data = req.body;
       const result = await jobCollection.insertOne(data);
+
+      res.send(result);
+    });
+
+    // company related operation
+    app.post("/api/companies", async (req, res) => {
+      const data = req.body;
+      const result = await companyCollection.insertOne(data);
 
       res.send(result);
     });
