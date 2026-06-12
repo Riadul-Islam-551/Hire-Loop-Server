@@ -69,13 +69,18 @@ async function run() {
     });
 
     // company related operation
+    app.get("/api/companies", async (req, res) => {
+      const result = await companyCollection.find().toArray();
+
+      res.send(result);
+    });
 
     app.get("/api/my/companies", async (req, res) => {
       const query = {};
       if (req.query.recruiterId) {
         query.recruiterID = req.query.recruiterId;
       }
-      console.log(query);
+
       const result = await companyCollection.findOne(query);
       res.send(result || {});
     });
