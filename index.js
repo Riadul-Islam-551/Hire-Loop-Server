@@ -51,7 +51,11 @@ async function run() {
 
     app.post("/api/jobs", async (req, res) => {
       const data = req.body;
-      const result = await jobCollection.insertOne(data);
+      const newJob = {
+        ...data,
+        createdAt: new Date(),
+      };
+      const result = await jobCollection.insertOne(newJob);
 
       res.send(result);
     });
