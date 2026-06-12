@@ -74,7 +74,11 @@ async function run() {
 
     app.post("/api/companies", async (req, res) => {
       const data = req.body;
-      const result = await companyCollection.insertOne(data);
+      const newCompany = {
+        ...data,
+        createdAt: new Date(),
+      };
+      const result = await companyCollection.insertOne(newCompany);
 
       res.send(result);
     });
