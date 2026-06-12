@@ -31,6 +31,14 @@ async function run() {
     const db = client.db("hire-loop");
     const jobCollection = db.collection("job");
     const companyCollection = db.collection("company");
+    const userCollection = db.collection("user");
+
+    //user related apis
+    app.get("/api/users", async (req, res) => {
+      const result = await userCollection.find().toArray();
+
+      res.send(result);
+    });
 
     // jobs related apis
     app.get("/api/jobs", async (req, res) => {
@@ -64,12 +72,12 @@ async function run() {
 
     app.get("/api/my/companies", async (req, res) => {
       const query = {};
-      if (req.query.recruiterID) {
-        query.recruiterID = req.query.recruiterID;
+      if (req.query.recruiterId) {
+        query.recruiterID = req.query.recruiterId;
       }
-
+      console.log(query);
       const result = await companyCollection.findOne(query);
-      res.send(result);
+      res.send(result || {});
     });
 
     app.post("/api/companies", async (req, res) => {
