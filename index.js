@@ -3,7 +3,7 @@ dns.setServers(["8.8.8.8", "8.8.4.4"]);
 
 const express = require("express");
 const cors = require("cors");
-const { MongoClient, ServerApiVersion } = require("mongodb");
+const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
 require("dotenv").config();
 
 const app = express();
@@ -53,6 +53,16 @@ async function run() {
 
       const cursor = jobCollection.find(query);
       const result = await cursor.toArray();
+
+      res.send(result);
+    });
+
+    app.get("/api/jobs/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = {
+        _id: new ObjectId(id),
+      };
+      const result = await jobCollection.findOne(query);
 
       res.send(result);
     });
