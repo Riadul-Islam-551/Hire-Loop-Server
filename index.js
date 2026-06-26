@@ -33,6 +33,8 @@ async function run() {
     const companyCollection = db.collection("company");
     const userCollection = db.collection("user");
     const applicationCollection = db.collection("applications");
+    const planCollection = db.collection("plans");
+    const subscriptionCollection = db.collection("subscriptions");
 
     //user related apis
     app.get("/api/users", async (req, res) => {
@@ -134,6 +136,43 @@ async function run() {
       const result = await companyCollection.insertOne(newCompany);
 
       res.send(result);
+    });
+
+    //plans
+    app.get("/api/plans", async (req, res) => {
+      const query = {};
+      if (req.query.plan_id) {
+        query.plan_id = req.query.plan_id;
+      }
+
+      const result = await planCollection.findOne(query);
+      res.send(result);
+    });
+
+    // subscription
+    app.post("/api/subscriptions", async (req, res) => {
+      const data = req.body;
+      const subsInfo = {
+        ...data,
+        createdAt: new Date(),
+      };
+
+      const result = await subscriptionCollection.insertOne(subsInfo);
+
+      //update the user plan information
+      const filter = { email: data.email };
+      //update the value of user
+      const updateDocument = {
+        $set: {
+          plan: data.planId,
+        },
+      };
+
+      const updateUserInformation = await userCollection.updateOne(
+        filter,
+        updateDocument,
+      );
+      res.send(updateUserInformation);
     });
 
     // Send a ping to confirm a successful connection
