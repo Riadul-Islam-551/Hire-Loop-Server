@@ -112,11 +112,17 @@ async function run() {
 
     // company related operation
     app.get("/api/companies", async (req, res) => {
-      const result = await companyCollection.find().toArray();
+      const query = {};
+      if (req.query.companyId) {
+        query._id = new ObjectId(req.query.companyId);
+      }
+
+      const result = await companyCollection.find(query).toArray();
 
       res.send(result);
     });
 
+    // get registered company of recruiter
     app.get("/api/my/companies", async (req, res) => {
       const query = {};
       if (req.query.recruiterId) {
